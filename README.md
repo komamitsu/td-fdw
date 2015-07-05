@@ -9,6 +9,9 @@ Install [Multicorn](http://multicorn.org/#installation) and build this FDW
     $ pgxn install multicorn
     $ cd td_fdw
     $ sudo easy_install .
+      or
+    $ python setup.py sdist
+	$ sudo python setup.py install
 
 ## Setup
 Connect to your PostgreSQL and create an extension and foreign server
