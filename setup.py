@@ -6,5 +6,5 @@ setup(name='TreasureDataFdw',
       author='Mitsunori Komatsu',
       author_email='komamitsu@gmail.com',
       url='https://github.com/komamitsu/td_fdw',
-      install_requires=['td-client'],
+      install_requires=['td-client', 'certifi'],
       py_modules=['tdfdw'])
