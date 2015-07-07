@@ -1,4 +1,4 @@
-# td_fdw
+# td-fdw
 
 Multicorn based PostgreSQL Foreign Data Wrapper for Treasure Data. 
 It makes your Treasure Data dataset appear as foreign tables in your PostgreSQL database.
@@ -8,7 +8,7 @@ Install [Multicorn](http://multicorn.org/#installation) and build this FDW
 
     $ pgxn install multicorn
     $ cd td_fdw
-    $ sudo pip install .
+    $ sudo pip install --upgrade .
       or
     $ python setup.py sdist
     $ sudo python setup.py install
