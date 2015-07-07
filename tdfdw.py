@@ -1,4 +1,5 @@
 from multicorn import ForeignDataWrapper
+from multicorn import ANY, ALL
 from multicorn.utils import log_to_postgres, ERROR, WARNING, DEBUG
 import tdclient
 
@@ -26,11 +27,51 @@ class TreasureDataFdw (ForeignDataWrapper):
             
         self.columns = columns
 
+    def create_cond(self, quals):
+        cond = ''
+        first_qual = True
+        for qual in quals:
+            if first_qual:
+                first_qual = False
+            else:
+                cond += ' AND '
+
+            cond += '('
+            if qual.value == None:
+                if qual.operator == '=':
+                    cond += '%s IS NULL' % (qual.field_name)
+                elif qual.operator == '<>':
+                    cond += '%s IS NOT NULL' % (qual.field_name)
+                else:
+                    log_to_postgres('Unexpected qual: %s' % (qual), ERROR)
+            else:
+                operator = qual.operator[0] if qual.is_list_operator else qual.operator
+                operator = 'LIKE' if operator == '~~' else operator
+                values = qual.value if qual.list_any_or_all else [qual.value]
+                first_value = True
+                for value in values:
+                    if first_value:
+                        first_value = False
+                    else:
+                        if qual.list_any_or_all == ANY:
+                            cond += ' OR '
+                        elif qual.list_any_or_all == ALL:
+                            cond += ' AND '
+                        else:
+                            log_to_postgres('Unexpected qual: %s' % (qual), ERROR)
+
+                    cond += '%s %s %s' % (qual.field_name, operator, value)
+            cond += ')'
+        return cond
+
     def execute(self, quals, columns):
         if self.query:
             statement = self.query
         else:
-            statement = "SELECT " + ",".join(self.columns.keys()) + " FROM " + self.table
+            cond = self.create_cond(quals)
+            statement = "SELECT %s FROM %s" % (",".join(self.columns.keys()), self.table)
+            if cond != '':
+                statement += ' WHERE %s' % (cond)
         
         log_to_postgres('TreasureData query: ' + unicode(statement), DEBUG)
 
