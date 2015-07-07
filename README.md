@@ -72,7 +72,13 @@ Specify your API key, database, query engine type ('presto' or 'hive') in CREATE
      Forbidden     |       12
      Unauthorized  |     3211
         :
-
-## TODO
-- Time index pushdown
-
+    
+    CREATE TABLE imported_summary AS SELECT * FROM nginx_status_summary;
+    SELECT * FROM imported_summary;
+         text      |   cnt
+    ---------------+----------
+     OK            | 10123456
+     Forbidden     |       12
+     Unauthorized  |     3211
+        :
+    
