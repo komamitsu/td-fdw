@@ -1,5 +1,6 @@
 build
 dist
-forcefdw.py~
+*.pyc
+.*.swp
 MANIFEST
 .project
