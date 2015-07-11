@@ -7,11 +7,11 @@ It makes your Treasure Data dataset appear as foreign tables in your PostgreSQL 
 Install [Multicorn](http://multicorn.org/#installation) and build this FDW
 
     $ pgxn install multicorn
-    $ cd td_fdw
+    $ sudo pip install td-fdw
+        or
+    $ git clone https://github.com/komamitsu/td-fdw.git
+    $ cd td-fdw
     $ sudo pip install --upgrade .
-      or
-    $ python setup.py sdist
-    $ sudo python setup.py install
 
 ## Setup
 Connect to your PostgreSQL and create an extension and foreign server
