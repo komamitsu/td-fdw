@@ -1,3 +1,4 @@
+import string
 from multicorn import ForeignDataWrapper
 from multicorn import ANY, ALL
 from multicorn.utils import log_to_postgres, ERROR, WARNING, DEBUG
@@ -29,7 +30,7 @@ class TreasureDataFdw (ForeignDataWrapper):
 
     def encode_value(self, value):
         if isinstance(value, basestring):
-            return "'%s'" % (value)
+            return "'%s'" % (string.replace(value, "'", "''"))
         else:
             return value
 

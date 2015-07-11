@@ -66,6 +66,8 @@ class TreasureDataFdwTest(unittest.TestCase):
         self.assertEqual(self.td_fdw.create_cond(quals), "(name IS NULL)")
         quals = [Qual('name', '<>', None)]
         self.assertEqual(self.td_fdw.create_cond(quals), "(name IS NOT NULL)")
+        quals = [Qual('name', '=', "al'ice")]
+        self.assertEqual(self.td_fdw.create_cond(quals), "(name = 'al''ice')")
         
     def test_create_cond_int(self):
         quals = [Qual('age', '=', 42)]
