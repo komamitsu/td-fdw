@@ -40,26 +40,26 @@ class TreasureDataFdwTest(unittest.TestCase):
         self.assertEqual(td_fdw.columns, [])
 
     def test_create_cond_string(self):
-        quals = [Qual('name', '=', "'alice'")]
+        quals = [Qual('name', '=', 'alice')]
         self.assertEqual(self.td_fdw.create_cond(quals), "(name = 'alice')")
-        quals = [Qual('name', '!=', "'alice'")]
+        quals = [Qual('name', '!=', 'alice')]
         self.assertEqual(self.td_fdw.create_cond(quals), "(name != 'alice')")
-        quals = [Qual('name', '<>', "'alice'")]
+        quals = [Qual('name', '<>', 'alice')]
         self.assertEqual(self.td_fdw.create_cond(quals), "(name <> 'alice')")
-        quals = [Qual('name', '>', "'alice'")]
+        quals = [Qual('name', '>', 'alice')]
         self.assertEqual(self.td_fdw.create_cond(quals), "(name > 'alice')")
-        quals = [Qual('name', '>=', "'alice'")]
+        quals = [Qual('name', '>=', 'alice')]
         self.assertEqual(self.td_fdw.create_cond(quals), "(name >= 'alice')")
-        quals = [Qual('name', '<', "'alice'")]
+        quals = [Qual('name', '<', 'alice')]
         self.assertEqual(self.td_fdw.create_cond(quals), "(name < 'alice')")
-        quals = [Qual('name', '<=', "'alice'")]
+        quals = [Qual('name', '<=', 'alice')]
         self.assertEqual(self.td_fdw.create_cond(quals), "(name <= 'alice')")
-        quals = [Qual('name', '~~', "'%alice%'")]
+        quals = [Qual('name', '~~', '%alice%')]
         self.assertEqual(self.td_fdw.create_cond(quals), "(name LIKE '%alice%')")
-        quals = [Qual('name', ('=', True), ["'alice'", "'bob'"])]
+        quals = [Qual('name', ('=', True), ['alice', 'bob'])]
         self.assertEqual(self.td_fdw.create_cond(quals),
                 "(name = 'alice' OR name = 'bob')")
-        quals = [Qual('name', ('<', False), ["'alice'", "'bob'"])]
+        quals = [Qual('name', ('<', False), ['alice', 'bob'])]
         self.assertEqual(self.td_fdw.create_cond(quals),
                 "(name < 'alice' AND name < 'bob')")
         quals = [Qual('name', '=', None)]
@@ -94,11 +94,11 @@ class TreasureDataFdwTest(unittest.TestCase):
         self.assertEqual(self.td_fdw.create_cond(quals), "(age IS NOT NULL)")
         
     def test_create_cond_multi_col(self):
-        quals = [Qual('name', '=', "'alice'"), Qual('age', '<', 42)]
+        quals = [Qual('name', '=', 'alice'), Qual('age', '<', 42)]
         self.assertEqual(self.td_fdw.create_cond(quals), "(name = 'alice') AND (age < 42)")
         quals = [Qual('name', '=', None), Qual('age', ('=', True), [42, 99])]
         self.assertEqual(self.td_fdw.create_cond(quals),
                 "(name IS NULL) AND (age = 42 OR age = 99)")
-        quals = [Qual('name', ('~~', False), ["'%alice%'", "'%bob%'"]), Qual('age', '<>', None)]
+        quals = [Qual('name', ('~~', False), ['%alice%', '%bob%']), Qual('age', '<>', None)]
         self.assertEqual(self.td_fdw.create_cond(quals),
                 "(name LIKE '%alice%' AND name LIKE '%bob%') AND (age IS NOT NULL)")

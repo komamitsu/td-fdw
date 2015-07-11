@@ -27,6 +27,12 @@ class TreasureDataFdw (ForeignDataWrapper):
             
         self.columns = columns
 
+    def encode_value(self, value):
+        if isinstance(value, basestring):
+            return "'%s'" % (value)
+        else:
+            return value
+
     def create_cond(self, quals):
         cond = ''
         first_qual = True
@@ -60,7 +66,7 @@ class TreasureDataFdw (ForeignDataWrapper):
                         else:
                             log_to_postgres('Unexpected qual: %s' % (qual), ERROR)
 
-                    cond += '%s %s %s' % (qual.field_name, operator, value)
+                    cond += '%s %s %s' % (qual.field_name, operator, self.encode_value(value))
             cond += ')'
         return cond
 
