@@ -1,5 +1,5 @@
 import unittest
-from tdfdw import TreasureDataFdw
+from tdfdw.tdfdw import TreasureDataFdw
 from multicorn import Qual, ANY, ALL
 
 class TreasureDataFdwTest(unittest.TestCase):

@@ -20,7 +20,7 @@ Connect to your PostgreSQL and create an extension and foreign server
     
     CREATE SERVER td_server FOREIGN DATA WRAPPER multicorn
     OPTIONS (
-        wrapper 'tdfdw.TreasureDataFdw'
+        wrapper 'tdfdw.tdfdw.TreasureDataFdw'
     );
 
 ## Usage
