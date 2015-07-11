@@ -82,3 +82,6 @@ Specify your API key, database, query engine type ('presto' or 'hive') in CREATE
      Unauthorized  |     3211
         :
     
+## Unit test
+
+    $ python -m unittest discover -p tests
