@@ -1,4 +1,6 @@
 import string
+import tempfile
+import csv
 from multicorn import ForeignDataWrapper
 from multicorn import ANY, ALL
 from multicorn.utils import log_to_postgres, ERROR, WARNING, DEBUG
@@ -96,3 +98,38 @@ class TreasureDataFdw (ForeignDataWrapper):
         except Exception, e:
             log_to_postgres(str(e), ERROR)
 
+    def insert(self, new_values):
+        f = tempfile.NamedTemporaryFile()
+        writer = csv.writer(f)
+        # Write header row
+        writer.writerow(self.columns)
+
+        for value in new_values:
+            writer.writerow(values)
+        writer.flush
+
+        try:
+            with tdclient.Client(apikey = self.apikey) as td:
+                session_name = "session-%d" % (int(time.time()),)
+                bulk_import = td.create_bulk_import(session_name, self.database, self.table)
+                try:
+                    # TODO: Multiparts
+                    part_name = "part-%s" % (f.name,)
+                    bulk_import.upload_file(part_name, "csv", f.name)
+                    bulk_import.freeze()
+                except:
+                    bulk_import.delete()
+                    raise
+                bulk_import.perform(wait = True)
+                if 0 < bulk_import.error_records:
+                    log_to_postgres("Detected %d error records." % (bulk_import.error_records,), ERROR)
+                if 0 < bulk_import.valid_records:
+                    log_to_postgres("Imported %d records." % (bulk_import.valid_records,), INFO)
+                else:
+                    log_to_postgres(RuntimeError("no records have been imported: %s" % (repr(bulk_import.name),)), ERROR)
+                bulk_import.commit()
+                bulk_import.delete()
+        except Exception, e:
+            if writer:
+                writer.close
+            log_to_postgres(str(e), ERROR)
