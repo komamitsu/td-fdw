@@ -11,6 +11,8 @@ class TreasureDataFdw (ForeignDataWrapper):
     
     def __init__(self, options, columns):
         super(TreasureDataFdw, self).__init__(options, columns)
+        self.endpoint = options.get("endpoint", None)
+
         if 'apikey' not in options:
             log_to_postgres('Parameter "apikey" is required.', ERROR)
         self.apikey = options.get("apikey", None)
@@ -83,7 +85,7 @@ class TreasureDataFdw (ForeignDataWrapper):
         log_to_postgres('TreasureData query: ' + unicode(statement), DEBUG)
 
         try:
-            with tdclient.Client(apikey = self.apikey) as td:
+            with tdclient.Client(apikey = self.apikey, endpoint = self.endpoint) as td:
                 job = td.query(self.database, statement, type=self.query_engine)
                 job.wait()
                 for row in job.result():
