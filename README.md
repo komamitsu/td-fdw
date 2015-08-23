@@ -27,7 +27,7 @@ Connect to your PostgreSQL and create an extension and foreign server
 Specify your API key, database, query engine type ('presto' or 'hive') in CREATE FOREIGN TABLE statement. You can specify either your table name or query for Treasure Data directly.
 
     CREATE FOREIGN TABLE sample_datasets (
-        "user" integer,
+        "user" varchar,
         host varchar,
         path varchar,
         referer varchar,
