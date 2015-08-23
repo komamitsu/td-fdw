@@ -82,6 +82,13 @@ Specify your API key, database, query engine type ('presto' or 'hive') in CREATE
      Unauthorized  |     3211
         :
     
+Also, you can specify other API endpoint.
+
+    SERVER td_server OPTIONS (
+        endpoint 'https://ybi.jp-east.idcfcloud.com'
+        apikey 'your_api_key',
+            :
+
 ## Unit test
 
     $ python -m unittest discover -p tests
