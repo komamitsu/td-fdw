@@ -27,6 +27,7 @@ Connect to your PostgreSQL and create an extension and foreign server
 Specify your API key, database, query engine type ('presto' or 'hive') in CREATE FOREIGN TABLE statement. You can specify either your table name or query for Treasure Data directly.
 
     CREATE FOREIGN TABLE sample_datasets (
+        time integer,
         "user" varchar,
         host varchar,
         path varchar,
@@ -42,8 +43,12 @@ Specify your API key, database, query engine type ('presto' or 'hive') in CREATE
         query_engine 'presto',
         table 'www_access'
     );
-
-    SELECT code, count(1) FROM sample_datasets group BY code;
+    
+    SELECT code, count(1)
+    FROM sample_datasets
+    WHERE time BETWEEN 1412121600 AND 1414800000    -- For time index pushdown in Treasure Data
+    GROUP BY code;
+    
      code | count
     ------+-------
       404 |    17
