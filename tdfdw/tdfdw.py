@@ -82,7 +82,7 @@ class TreasureDataFdw (ForeignDataWrapper):
             if cond != '':
                 statement += ' WHERE %s' % (cond)
         
-        log_to_postgres('TreasureData query: ' + unicode(statement), DEBUG)
+        log_to_postgres('TreasureData query: ' + str(statement), DEBUG)
 
         try:
             with tdclient.Client(apikey = self.apikey, endpoint = self.endpoint) as td:
@@ -95,6 +95,6 @@ class TreasureDataFdw (ForeignDataWrapper):
                         record[column_name] = row[i]
                         i += 1
                     yield record
-        except Exception, e:
+        except Exception as e:
             log_to_postgres(str(e), ERROR)
 
