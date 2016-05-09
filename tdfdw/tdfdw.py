@@ -32,9 +32,9 @@ class TreasureDataFdw (ForeignDataWrapper):
 
     def encode_value(self, value):
         try:
-              string_alike = basestring
+            string_alike = basestring
         except NameError:
-              string_alike = str
+            string_alike = str
 
         if isinstance(value, string_alike):
             return "'%s'" % (string.replace(value, "'", "''"))
