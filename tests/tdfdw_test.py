@@ -56,6 +56,8 @@ class TreasureDataFdwTest(unittest.TestCase):
         self.assertEqual(self.td_fdw.create_cond(quals), "(name <= 'alice')")
         quals = [Qual('name', '~~', '%alice%')]
         self.assertEqual(self.td_fdw.create_cond(quals), "(name LIKE '%alice%')")
+        quals = [Qual('name', '!~~', '%alice%')]
+        self.assertEqual(self.td_fdw.create_cond(quals), "(name NOT LIKE '%alice%')")
         quals = [Qual('name', ('=', True), ['alice', 'bob'])]
         self.assertEqual(self.td_fdw.create_cond(quals),
                 "(name = 'alice' OR name = 'bob')")
@@ -104,3 +106,6 @@ class TreasureDataFdwTest(unittest.TestCase):
         quals = [Qual('name', ('~~', False), ['%alice%', '%bob%']), Qual('age', '<>', None)]
         self.assertEqual(self.td_fdw.create_cond(quals),
                 "(name LIKE '%alice%' AND name LIKE '%bob%') AND (age IS NOT NULL)")
+        quals = [Qual('name', ('!~~', False), ['%alice%', '%bob%']), Qual('age', '<>', None)]
+        self.assertEqual(self.td_fdw.create_cond(quals),
+                "(name NOT LIKE '%alice%' AND name NOT LIKE '%bob%') AND (age IS NOT NULL)")

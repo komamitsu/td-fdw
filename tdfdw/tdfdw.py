@@ -60,7 +60,11 @@ class TreasureDataFdw (ForeignDataWrapper):
                     log_to_postgres('Unexpected qual: %s' % (qual), ERROR)
             else:
                 operator = qual.operator[0] if qual.is_list_operator else qual.operator
-                operator = 'LIKE' if operator == '~~' else operator
+                if operator == '~~':
+                    operator = 'LIKE'
+                elif operator == '!~~':
+                    operator = 'NOT LIKE'
+
                 values = qual.value if qual.list_any_or_all else [qual.value]
                 first_value = True
                 for value in values:
