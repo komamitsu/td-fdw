@@ -3,6 +3,8 @@
 Multicorn based PostgreSQL Foreign Data Wrapper for Treasure Data. 
 It makes your Treasure Data dataset appear as foreign tables in your PostgreSQL database.
 
+Also, I developed [treasuredata_fdw](https://github.com/komamitsu/treasuredata_fdw) which is faster and more optimized. Try it out if you get a chance!
+
 ## Installation
 Install [Multicorn](http://multicorn.org/#installation) and build this FDW
 
